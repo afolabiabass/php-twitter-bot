@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use AfolabiAbass\App\TwitterCommand;
+use Symfony\Component\Dotenv\Dotenv;
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+
+define("TWITTER_CONSUMER_KEY", getenv('TWITTER_API_KEY'));
+define("TWITTER_CONSUMER_SECRET", getenv('TWITTER_API_SECRET'));
+define("OAUTH_TOKEN", getenv('TWITTER_ACCESS_TOKEN'));
+define("OAUTH_SECRET", getenv('TWITTER_ACCESS_TOKEN_SECRET'));
+
+$app = new Application();
+$app->add(new TwitterCommand());
+$app->run();
