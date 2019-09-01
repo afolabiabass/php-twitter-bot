@@ -8,12 +8,15 @@
 
 namespace AfolabiAbass\App;
 
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class TwitterCommand
+ * @package AfolabiAbass\App
+ */
 class TwitterCommand extends Command
 {
     protected function configure()
@@ -23,6 +26,12 @@ class TwitterCommand extends Command
             ->addArgument('Filter', InputArgument::REQUIRED, 'What filter would you like to draw tweets');
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void|null
+     * @throws \ErrorException
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //Call Twitter

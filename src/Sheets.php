@@ -8,20 +8,32 @@
 
 namespace AfolabiAbass\App;
 
-
 use Google_Service_Sheets;
+use Google_Client;
 use Google_Service_Sheets_ValueRange;
 use Phirehose;
 use OauthPhirehose;
+use GuzzleHttp\Exception\GuzzleException;
+use ErrorException;
 
-
+/**
+ * Class Sheets
+ * @package AfolabiAbass\App
+ */
 class Sheets extends OauthPhirehose
 {
+    /**
+     * @var \Google_Client
+     */
     private $client;
-
+    /**
+     * @var array
+     */
     private $values;
-
-    private $twitter_data;
+    /**
+     * @var string
+     */
+    private $twitterData;
 
     /**
      * Sheets constructor.
@@ -32,17 +44,17 @@ class Sheets extends OauthPhirehose
      */
     public function __construct($data)
     {
-        $this->client = new \Google_Client();
+        $this->client = new Google_Client();
         $this->client->setClientId(getenv('GOOGLE_CLIENT_ID'));
         $this->client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
-        $this->client->SetRedirectUri(getenv('GOOGLE_CLIENT_REDIRECT'));
-        $this->client->setScopes(\Google_Service_Sheets::SPREADSHEETS);
+        $this->client->setRedirectUri(getenv('GOOGLE_CLIENT_REDIRECT'));
+        $this->client->setScopes([Google_Service_Sheets::SPREADSHEETS]);
         $this->client->setAccessType('offline');
 
         $this->getAccessToken();
 
-        $this->twitter_data = $data;
-        parent::__construct($this->twitter_data['oauth_token'], $this->twitter_data['oauth_secret'], $this->twitter_data['method']);
+        $this->twitterData = $data;
+        parent::__construct($this->twitterData['oauth_token'], $this->twitterData['oauth_secret'], $this->twitterData['method']);
 
         $this->values = [];
     }
@@ -50,6 +62,7 @@ class Sheets extends OauthPhirehose
     /**
      * @param $query
      * @return array
+     * @throws GuzzleException
      */
     public function getValues($query)
     {
@@ -66,10 +79,11 @@ class Sheets extends OauthPhirehose
 
     /**
      * @param $filter
+     * @throws ErrorException
      */
     public function updateSpreadSheet($filter)
     {
-        $this->setTrack(array($filter));
+        $this->setTrack([$filter]);
         $this->consume();
     }
 

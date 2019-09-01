@@ -9,15 +9,29 @@
 namespace AfolabiAbass\App;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * Class Twitter
+ * @package AfolabiAbass\App
+ */
 class Twitter
 {
+    /**
+     * @var array|false|string
+     */
     private $url;
-
+    /**
+     * @var array|false|string
+     */
     private $key;
-
+    /**
+     * @var array|false|string
+     */
     private $secret;
-
+    /**
+     * @var Client
+     */
     private $client;
 
     public function __construct()
@@ -29,6 +43,9 @@ class Twitter
         $this->client = new Client();
     }
 
+    /**
+     * @return string
+     */
     private function getAppToken()
     {
         $auth = urlencode($this->key).':'.urlencode($this->secret);
@@ -36,6 +53,10 @@ class Twitter
         return base64_encode($auth);
     }
 
+    /**
+     * @return array
+     * @throws GuzzleException
+     */
     private function accessToken()
     {
         try {
@@ -61,6 +82,10 @@ class Twitter
         }
     }
 
+    /**
+     * @return mixed|string
+     * @throws GuzzleException
+     */
     public function getAccessToken()
     {
         if(isset($_SESSION['twitter_access_token']) && $_SESSION['twitter_access_token']) {
@@ -75,6 +100,11 @@ class Twitter
         }
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     * @throws GuzzleException
+     */
     public function getTweets($query)
     {
         $twitter_results = json_decode('{"statuses"}');
@@ -96,7 +126,5 @@ class Twitter
         }
         return $twitter_results;
     }
-
-
 
 }
